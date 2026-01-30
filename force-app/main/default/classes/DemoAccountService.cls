@@ -3,19 +3,13 @@ public with sharing class DemoAccountService {
         if (countToCreate == 1 || countToCreate <= 1) {
             return;
         }
-% /*commentyoyoyoyoyoyoyoyoyo still testing */
-% /*heloooooooooooooo*/
-% /*Heyyyy Yaaaa*/
-% /* Jai Bhavani*/
-% /*Hel;lo*/
-% /* mat kr lala*/
 
         List<Account> accounts = new List<Account>();
         for (Integer i = 0; i < countToCreate; i++) {
             accounts.add(new Account(
                 Name = 'Demo Account ' + String.valueOf(i + 1)
             ));
-        }
+        }Brah
         insert accounts;
     }
 }
