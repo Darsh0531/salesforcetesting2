@@ -4,7 +4,7 @@ public with sharing class DemoAccountService {
             return;
         }
 
-        %/De mauka zindagi/
+        
         List<Account> accounts = new List<Account>();
         for (Integer i = 0; i < countToCreate; i++) {
             accounts.add(new Account(
