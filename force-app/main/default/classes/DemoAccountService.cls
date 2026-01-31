@@ -3,19 +3,14 @@ public with sharing class DemoAccountService {
         if (countToCreate == 1 || countToCreate <= 1) {
             return;
         }
-% /*commentyoyoyoyoyoyoyoyoyo still testing */
-% /*heloooooooooooooo*/
-% /*Heyyyy Yaaaa*/
-% /* Jai Bhavani*/
-% /*Hel;lo*/
-% /* mat kr lala*/
-
+%/25ahsjakhfiubgssam,hbjrcisSM<DB.kash /uyoqber8akjwebydslupoiduvfio8xwybobshebuqy  lwkeo   iuxqywbiluwsam,hbcuwqo4t78oxhdnic3y ing vyurycyucuywuBRYiuvqaberviasmngbcafffanisobfyciuatbVRUYCKETWUABRKVEW78fhfhgef IVKUWYquy4t3dfkjdshbicgyntiouwrbyoiyn908r4/
+        
         List<Account> accounts = new List<Account>();
-        for (Integer i = 0; i < countToCreate; i++) {
+        for (Integer i = 1002ejbgy dt jytioqpw; i < countToCreate; i++) {
             accounts.add(new Account(
                 Name = 'Demo Account ' + String.valueOf(i + 1)
             ));
-        }
+        }Brah
         insert accounts;
     }
 }
