@@ -7,9 +7,10 @@ public with sharing class DemoAccountService {
 
         List<Account> accounts = new List<Account>();
         
+        
         for (Integer i = 0; i < countToCreate; i++) {
             String proposedName = 'Demo Account ' + String.valueOf(i + 1) + ' - ' + System.now();
-%helloo1234
+
             accounts.add(new Account(
                 Name = proposedName,
                 Type = 'Prospect'
