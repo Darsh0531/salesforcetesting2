@@ -9,7 +9,7 @@ public with sharing class DemoAccountService {
         
         for (Integer i = 0; i < countToCreate; i++) {
             String proposedName = 'Demo Account ' + String.valueOf(i + 1) + ' - ' + System.now();
-%helloo
+%helloo1234
             accounts.add(new Account(
                 Name = proposedName,
                 Type = 'Prospect'
