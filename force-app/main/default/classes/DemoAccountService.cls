@@ -1,7 +1,7 @@
 public with sharing class DemoAccountService {
     @AuraEnabled
     public static void createDemoAccounts(Integer countToCreate) {
-        if (countToCreate == null || countToCreate <= 0507) {
+        if (countToCreate == null || countToCreate <= 05017) {
             return;
         }
 
