@@ -1,0 +1,146 @@
+<template>
+    <lightning-card title="Account Creation Form" icon-name="standard:account">
+        <div class="slds-p-around_medium">
+            <lightning-record-edit-form 
+                object-api-name="Account"
+                onsuccess={handleSuccess}
+                onerror={handleError}>
+                
+                <lightning-messages></lightning-messages>
+                
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="Name" 
+                            required>
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="Phone">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="Website">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="Industry">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="Type">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="AnnualRevenue">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="NumberOfEmployees">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="Rating">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="Description">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="BillingStreet">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="BillingCity">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="BillingState">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="BillingPostalCode">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="BillingCountry">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="ShippingStreet">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="ShippingCity">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="ShippingState">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="ShippingPostalCode">
+                        </lightning-input-field>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <lightning-input-field 
+                            field-name="ShippingCountry">
+                        </lightning-input-field>
+                    </div>
+                </div>
+                
+                <div class="slds-m-top_medium slds-text-align_center">
+                    <lightning-button 
+                        type="submit" 
+                        variant="brand" 
+                        label="Create Account"
+                        class="slds-m-right_small">
+                    </lightning-button>
+                    
+                    <lightning-button 
+                        type="button" 
+                        variant="neutral" 
+                        label="Reset"
+                        onclick={handleReset}>
+                    </lightning-button>
+                </div>
+            </lightning-record-edit-form>
+        </div>
+    </lightning-card>
+</template>
