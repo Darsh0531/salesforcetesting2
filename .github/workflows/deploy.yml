@@ -2,8 +2,10 @@ name: Deploy
 
 on:
   push:
-    branches: [ main, test4 ]
-  workflow_dispatch:
+    branches: [ "main", "test2", "test4" ]
+    paths-ignore:
+      - 'README.md'
+      - '.github/**'
 
 jobs:
   deploy:
