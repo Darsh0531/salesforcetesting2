@@ -1,10 +1,10 @@
-name: Run Test Cases
+name: making tests
 
 on:
-  push:
-    branches: [ main, test4 ]
-  pull_request:
-    branches: [ main, test4 ]
+  workflow_run:
+    workflows: ["Deploy"]
+    types:
+      - completed
   workflow_dispatch:
 
 jobs:
@@ -18,31 +18,23 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
-        cache: 'npm'
-        
+        node-version: '20'
+
     - name: Install Salesforce CLI
-      run: |
-        wget https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
-        mkdir sfdx-cli
-        tar xJf sfdx-linux-amd64.tar.xz -C sfdx-cli --strip-components 1
-        echo "./sfdx-cli/bin" >> $GITHUB_PATH
+      run: npm install --global @salesforce/cli
         
     - name: Install dependencies
       run: npm install
       
-    - name: Authenticate Salesforce Org
+    - name: Authenticate to Salesforce
       run: |
-        echo ${{ secrets.SALESFORCE_JWT_SECRET_KEY }} > server.key
-        sfdx force:auth:jwt:grant --clientid ${{ secrets.SALESFORCE_CONSUMER_KEY }} --jwtkeyfile server.key --username ${{ secrets.SALESFORCE_USERNAME }} --setalias dev-org -a
-        
-    - name: Deploy to Salesforce
-      run: |
-        sfdx force:source:deploy --sourcepath force-app --json
+        echo "${{ secrets.SFDX_AUTH_URL }}" > auth_url.txt
+        sf org login sfdx-url --sfdx-url-file auth_url.txt --set-default --alias staging-org
+        rm auth_url.txt
         
     - name: Run Apex Tests
       run: |
-        sfdx force:apex:test:run --testlevel RunLocalTests --codecoverage --resultformat human --outputdir tests/results
+        sf apex run test --test-level RunLocalTests --code-coverage --result-format human --output-dir tests/results
         
     - name: Run LWC Jest Tests
       run: |
@@ -54,11 +46,6 @@ jobs:
       with:
         name: test-results
         path: tests/results/
-        
-    - name: Check Code Coverage
-      run: |
-        echo "Checking code coverage thresholds..."
-        # Add coverage threshold checks here if needed
         
     - name: Notify on Success
       if: success()
