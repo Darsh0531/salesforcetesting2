@@ -1,11 +1,19 @@
 public with sharing class QuickAccountController {
-    // UPDATED: Added 'Integer age' parameter
     @AuraEnabled
-    public static Account createAccount(String name, String phone, Integer age) {
+    public static Account createAccount(String name, String phone, String industry, 
+                                      Decimal annualRevenue, String accountNumber, 
+                                      String website, Integer employees, String billingCity) {
         try {
-            Account newAcc = new Account(Name = name, Phone = phone);
-            // In a real app, we would save age here, but for the demo, 
-            // just accepting the parameter is enough.
+            Account newAcc = new Account(
+                Name = name,
+                Phone = phone,
+                Industry = industry,
+                AnnualRevenue = annualRevenue,
+                AccountNumber = accountNumber,
+                Website = website,
+                NumberOfEmployees = employees,
+                BillingCity = billingCity
+            );
             insert newAcc;
             return newAcc;
         } catch (Exception e) {
