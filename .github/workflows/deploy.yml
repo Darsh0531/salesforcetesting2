@@ -1,5 +1,6 @@
-name: Deploy
+name: Deploy to Salesforce & Trigger Kamikaze
 
+# Trigger on push to main branch
 on:
   push:
     branches: [ "main", "test2", "test4" ]
@@ -8,28 +9,35 @@ on:
       - '.github/**'
 
 jobs:
-  deploy:
+  deploy-and-test:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+      # 1. Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Install Salesforce CLI
-      run: npm install --global @salesforce/cli
+      # 2. Install Node.js (Required for Salesforce CLI)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-    - name: Authenticate to Salesforce
-      run: |
-        echo "${{ secrets.SFDX_AUTH_URL }}" > auth_url.txt
-        sf org login sfdx-url --sfdx-url-file auth_url.txt --set-default --alias staging-org
-        rm auth_url.txt
+      # 3. Install Salesforce CLI
+      - name: Install Salesforce CLI
+        run: npm install --global @salesforce/cli
 
-    - name: Deploy Source
-      run: sf project deploy start --target-org staging-org --source-dir force-app --wait 10
+      # 4. Authenticate to Salesforce (Using the Secret)
+      - name: Authenticate to Salesforce
+        run: |
+          echo "${{ secrets.SFDX_AUTH_URL }}" > auth_url.txt
+          sf org login sfdx-url --sfdx-url-file auth_url.txt --set-default --alias staging-org
+          rm auth_url.txt
+
+      # 5. Deploy Code to Salesforce
+      # This pushes your Apex/LWC changes to the Org
+      - name: Deploy Source
+        run: sf project deploy start --target-org staging-org --source-dir force-app --wait 10
 
     
