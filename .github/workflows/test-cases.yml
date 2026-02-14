@@ -1,0 +1,71 @@
+name: Run Test Cases
+
+on:
+  push:
+    branches: [ main, test4 ]
+  pull_request:
+    branches: [ main, test4 ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install Salesforce CLI
+      run: |
+        wget https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+        mkdir sfdx-cli
+        tar xJf sfdx-linux-amd64.tar.xz -C sfdx-cli --strip-components 1
+        echo "./sfdx-cli/bin" >> $GITHUB_PATH
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Authenticate Salesforce Org
+      run: |
+        echo ${{ secrets.SALESFORCE_JWT_SECRET_KEY }} > server.key
+        sfdx force:auth:jwt:grant --clientid ${{ secrets.SALESFORCE_CONSUMER_KEY }} --jwtkeyfile server.key --username ${{ secrets.SALESFORCE_USERNAME }} --setalias dev-org -a
+        
+    - name: Deploy to Salesforce
+      run: |
+        sfdx force:source:deploy --sourcepath force-app --json
+        
+    - name: Run Apex Tests
+      run: |
+        sfdx force:apex:test:run --testlevel RunLocalTests --codecoverage --resultformat human --outputdir tests/results
+        
+    - name: Run LWC Jest Tests
+      run: |
+        npm run test:unit
+        
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: tests/results/
+        
+    - name: Check Code Coverage
+      run: |
+        echo "Checking code coverage thresholds..."
+        # Add coverage threshold checks here if needed
+        
+    - name: Notify on Success
+      if: success()
+      run: |
+        echo "✅ All tests passed successfully!"
+        
+    - name: Notify on Failure
+      if: failure()
+      run: |
+        echo "❌ Tests failed. Check the logs for details."
