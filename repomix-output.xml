@@ -1,0 +1,444 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.github/
+  workflows/
+    deploy.yml
+force-app/
+  main/
+    default/
+      classes/
+        DemoAccountService.cls
+        DemoAccountService.cls-meta.xml
+        DemoAccountTriggerHandler.cls
+        DemoAccountTriggerHandler.cls-meta.xml
+        QuickAccountController.cls
+        QuickAccountController.cls-meta.xml
+      lwc/
+        deploymentTracker/
+          deploymentTracker.html
+          deploymentTracker.js
+          deploymentTracker.js-meta.xml
+        quickAccountWizard/
+          quickAccountWizard.html
+          quickAccountWizard.js
+          quickAccountWizard.js-meta.xml
+      tabs/
+        Quick_Account_Wizard.tab-meta.xml
+      triggers/
+        AccountBeforeInsert.trigger
+        AccountBeforeInsert.trigger-meta.xml
+README.md
+sfdx-project.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="force-app/main/default/classes/DemoAccountService.cls-meta.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexClass xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <status>Active</status>
+</ApexClass>
+</file>
+
+<file path="force-app/main/default/classes/DemoAccountTriggerHandler.cls-meta.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexClass xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <status>Active</status>
+</ApexClass>
+</file>
+
+<file path="force-app/main/default/classes/QuickAccountController.cls">
+public with sharing class QuickAccountController {
+    @AuraEnabled
+    public static Account createAccount(String name, String phone) {
+        try {
+            Account newAcc = new Account(Name = name, Phone = phone);
+            insert newAcc;
+            return newAcc;
+        } catch (Exception e) {
+            throw new AuraHandledException('Error creating account: ' + e.getMessage());
+        }
+    }
+}
+</file>
+
+<file path="force-app/main/default/classes/QuickAccountController.cls-meta.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexClass xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <status>Active</status>
+</ApexClass>
+</file>
+
+<file path="force-app/main/default/lwc/deploymentTracker/deploymentTracker.html">
+<template>
+    <lightning-card title="🚀 Jataka CI/CD Monitor" icon-name="standard:code_playground">
+        <div class="slds-p-around_medium">
+            
+            <!-- Visual Header -->
+            <div class="slds-box slds-theme_success slds-theme_alert-texture slds-m-bottom_medium">
+                <h2 class="slds-text-heading_medium slds-text-align_center">
+                    Deployment Successful!
+                </h2>
+                <p class="slds-text-align_center">Version 2.0 - Verified on Staging</p>
+            </div>
+
+            <!-- Progress Bar UI -->
+            <div class="slds-m-bottom_medium">
+                <p>Pipeline Status:</p>
+                <lightning-progress-bar value="100" variant="circular" size="large"></lightning-progress-bar>
+            </div>
+
+            <!-- Interactive List -->
+            <ul class="slds-has-dividers_around slds-has-block-links_space">
+                <li class="slds-item">
+                    <lightning-icon icon-name="action:approval" size="xx-small" class="slds-m-right_small"></lightning-icon>
+                    GitHub Push Received
+                </li>
+                <li class="slds-item">
+                    <lightning-icon icon-name="action:approval" size="xx-small" class="slds-m-right_small"></lightning-icon>
+                    SFDX Deploy Complete
+                </li>
+                <li class="slds-item">
+                    <lightning-icon icon-name="standard:bot" size="small" class="slds-m-right_small"></lightning-icon>
+                    <strong>Waiting for Jataka Ghost...</strong>
+                </li>
+            </ul>
+
+            <!-- Button for Kamikaze to Click -->
+            <div class="slds-align_absolute-center slds-m-top_medium">
+                <lightning-button 
+                    variant="destructive" 
+                    label="Run Smoke Test" 
+                    onclick={handleSmokeTest}
+                    class="smoke-test-btn">
+                </lightning-button>
+            </div>
+
+            <!-- Toast Placeholder -->
+            <template if:true={statusMessage}>
+                <div class="slds-m-top_small slds-text-color_error slds-align_absolute-center">
+                    {statusMessage}
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>
+</file>
+
+<file path="force-app/main/default/lwc/deploymentTracker/deploymentTracker.js">
+import { LightningElement, track } from 'lwc';
+import createDemoAccounts from '@salesforce/apex/DemoAccountService.createDemoAccounts';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+
+export default class DeploymentTracker extends LightningElement {
+    @track statusMessage = '';
+
+    handleSmokeTest() {
+        this.statusMessage = 'Running smoke test logic...';
+        
+        // Call the Apex method we updated in Step 1
+        createDemoAccounts({ countToCreate: 1 })
+            .then(() => {
+                this.statusMessage = 'Smoke Test Passed: Account Created!';
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Apex Connection Verified',
+                        variant: 'success'
+                    })
+                );
+            })
+            .catch(error => {
+                this.statusMessage = 'Error: ' + error.body.message;
+            });
+    }
+}
+</file>
+
+<file path="force-app/main/default/lwc/quickAccountWizard/quickAccountWizard.js">
+import { LightningElement, track } from 'lwc';
+import createAccount from '@salesforce/apex/QuickAccountController.createAccount';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+
+export default class QuickAccountWizard extends LightningElement {
+    @track message = '';
+
+    handleCreate() {
+        const nameInput = this.template.querySelector('[data-id="accName"]');
+        const phoneInput = this.template.querySelector('[data-id="accPhone"]');
+        
+        const name = nameInput.value;
+        const phone = phoneInput.value;
+
+        if (!name) {
+            nameInput.reportValidity();
+            return;
+        }
+
+        createAccount({ name: name, phone: phone })
+            .then(result => {
+                this.message = `Success! Created account: ${result.Name}`;
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Account created successfully!',
+                        variant: 'success'
+                    })
+                );
+                // Clear inputs
+                nameInput.value = '';
+                phoneInput.value = '';
+            })
+            .catch(error => {
+                this.message = 'Error creating account';
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message: error.body.message,
+                        variant: 'error'
+                    })
+                );
+            });
+    }
+}
+</file>
+
+<file path="force-app/main/default/tabs/Quick_Account_Wizard.tab-meta.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Jataka Demo Tab</description>
+    <label>Quick Account Wizard</label>
+    <lwcComponent>quickAccountWizard</lwcComponent>
+    <motif>Custom1: Heart</motif>
+</CustomTab>
+</file>
+
+<file path="force-app/main/default/triggers/AccountBeforeInsert.trigger-meta.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexTrigger xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <status>Active</status>
+</ApexTrigger>
+</file>
+
+<file path="README.md">
+# salesforcetesting2
+
+Demo Salesforce project with simple Apex classes, trigger, and metadata files.
+</file>
+
+<file path="sfdx-project.json">
+{
+    "packageDirectories": [
+      {
+        "path": "force-app",
+        "default": true
+      }
+    ],
+    "name": "DemoProject",
+    "namespace": "",
+    "sfdcLoginUrl": "https://login.salesforce.com",
+    "sourceApiVersion": "60.0"
+  }
+</file>
+
+<file path="force-app/main/default/lwc/quickAccountWizard/quickAccountWizard.html">
+<template>
+    <lightning-card title="🔥 URGENT ACCOUNT WIZARD" icon-name="custom:custom1">
+        <div class="slds-p-around_medium" style="background-color: #ffeaea; border: 2px solid red; border-radius: 5px;">
+            <div class="slds-text-align_center slds-m-bottom_medium">
+                <h1 class="slds-text-heading_large" style="color: red; font-weight: bold;">
+                    CI/CD DEPLOYMENT VERIFIED
+                </h1>
+                <p>This UI was updated automatically by GitHub Actions!</p>
+            </div>
+            <div class="slds-m-bottom_small">
+                <lightning-input label="VIP Client Name" data-id="accName" required></lightning-input>
+            </div>
+            <div class="slds-m-bottom_small">
+                <lightning-input type="tel" label="Emergency Contact" data-id="accPhone"></lightning-input>
+            </div>
+            <div class="slds-align_absolute-center slds-m-top_medium">
+                <lightning-button 
+                    variant="destructive" 
+                    label="CREATE VIP ACCOUNT" 
+                    title="Create Account" 
+                    onclick={handleCreate}
+                    class="create-btn">
+                </lightning-button>
+            </div>
+            <template if:true={message}>
+                <div class="slds-m-top_medium slds-text-color_success slds-align_absolute-center slds-text-heading_small">
+                    <b>{message}</b>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
+</file>
+
+<file path="force-app/main/default/lwc/quickAccountWizard/quickAccountWizard.js-meta.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__Tab</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+    </targets>
+</LightningComponentBundle>
+</file>
+
+<file path="force-app/main/default/triggers/AccountBeforeInsert.trigger">
+trigger AccountBeforeInsert on Account (before insert) {
+    if (Trigger.isBefore && Trigger.isInsert) {
+        DemoAccountTriggerHandler.handleBeforeInsert(Trigger.new);
+    }
+}
+</file>
+
+<file path="force-app/main/default/classes/DemoAccountTriggerHandler.cls">
+public with sharing class DemoAccountTriggerHandler {
+    public static void handleBeforeInsert(List<Account> newAccounts) {
+        for (Account acc : newAccounts) {
+            // Logic to be executed before insert
+            System.debug('Processing Account: ' + acc.Name);
+        }
+    }
+}
+</file>
+
+<file path="force-app/main/default/lwc/deploymentTracker/deploymentTracker.js-meta.xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>60.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Jataka Deployment Tracker</masterLabel>
+    <targets>
+        <target>lightning__Tab</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+    </targets>
+</LightningComponentBundle>
+</file>
+
+<file path=".github/workflows/deploy.yml">
+name: Deploy to Salesforce & Trigger Kamikaze
+
+# Trigger on push to main branch
+on:
+  push:
+    branches: [ "main", "test2", "test4" ]
+    paths-ignore:
+      - 'README.md'
+      - '.github/**'
+
+jobs:
+  deploy-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2. Install Node.js (Required for Salesforce CLI)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 3. Install Salesforce CLI
+      - name: Install Salesforce CLI
+        run: npm install --global @salesforce/cli
+
+      # 4. Authenticate to Salesforce (Using the Secret)
+      - name: Authenticate to Salesforce
+        run: |
+          echo "${{ secrets.SFDX_AUTH_URL }}" > auth_url.txt
+          sf org login sfdx-url --sfdx-url-file auth_url.txt --set-default --alias staging-org
+          rm auth_url.txt
+
+      # 5. Deploy Code to Salesforce
+      # This pushes your Apex/LWC changes to the Org
+      - name: Deploy Source
+        run: sf project deploy start --target-org staging-org --source-dir force-app --wait 10
+</file>
+
+<file path="force-app/main/default/classes/DemoAccountService.cls">
+public with sharing class DemoAccountService {
+    @AuraEnabled
+    public static void createDemoAccounts(Integer countToCreate) {
+        if (countToCreate == 123 || countToCreate <= 100) {
+            return;
+        }
+
+        List<Account> accounts darshdeiohh= new List<Account>();
+
+        //trigger ci/cd pipeline test2 trigger check new last check plzzzzz last ddvfd jgjhg
+        
+        for (Integer i = 0; i < countToCreate; i++) {
+            // FIX: Removed the 'if' block that throws the exception
+            // This ensures the code now works correctly on Staging
+            String proposedName = 'Demo Account ' + String.valueOf(i + 1) + ' - ' + System.now();
+
+            accounts.add(new Account(
+                Name = proposedName,
+                Type = 'Prospect'
+            ));
+        }
+        insert accounts;
+    }
+}
+</file>
+
+</files>
