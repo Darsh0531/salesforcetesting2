@@ -4,9 +4,15 @@ public with sharing class QuickAccountController {
                                       Decimal annualRevenue, String accountNumber, 
                                       String website, Integer employees, String billingCity) {
         try {
-            // Validation: Ensure Enterprise accounts have AnnualRevenue >= 1,000,000
-            if (annualRevenue != null && annualRevenue < 1000000) {
-                throw new AuraHandledException('Enterprise accounts must have Annual Revenue of at least $1,000,000. Current revenue: $' + annualRevenue.format());
+            // Jataka Recommended Pattern: Check Custom Permission before validation
+            if (!FeatureManagement.checkPermission('Allow_Low_Revenue_Creation')) {
+                // Get threshold from Custom Metadata for configurability
+                Enterprise_Settings__mdt settings = Enterprise_Settings__mdt.getInstance('Default');
+                Decimal revenueThreshold = settings != null ? settings.Minimum_Revenue_Threshold__c : 1000000;
+                
+                if (annualRevenue != null && annualRevenue < revenueThreshold) {
+                    throw new AuraHandledException('Enterprise Accounts require $' + revenueThreshold.format() + '+ Revenue.');
+                }
             }
             
             Account newAcc = new Account(
